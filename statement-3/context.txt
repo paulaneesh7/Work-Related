@@ -1,0 +1,176 @@
+Ok so let me give you the entire context of this work
+
+So in my previous project (in my organization and I have been shifted to a different project team now).
+So in that project we used to work on an archival application, we the application is we were building was supposed to be used
+by our client for R&D purpose, so it was a read-only application but it was quite big and there were multiple modules and section
+
+So the main work for that was that : There was 2 migration work mainly related to the backend side which was about un-structure and structure data
+The unstructure data (as you know word doc, pdf files, images etc...) were to be moved from NAS (local storage) -> AWS S3
+And the structure data (present in Oracle DB) was to be moved to Postgres DB.
+
+Un-structure :
+1) There were multiple files of different types were present word doc (old and new version), pdf files, images and other types of documents.
+2) We had to move them from NAS storage to AWS S3 (via python script or AWS CLI command) into an AWS bucket in a seperate folder (maybe the folder name was "source_files" or somthing like that)
+3) Now that the files are moved into AWS S3 bucket, they were to be inserted into OpenSearch but before that there was a process.
+3) The content present in those source files, they were extracted into CSV files such that :
+    - Each row of CSV file contains record of an entire file in the format (file_name, file_path, content (entire content)).
+    - In this way multiple csv files were created throught a python script to extracted those meta data from the source_files
+    - Even though csv files has not limit, still a limit was placed in the extraction python script that as soon as 1000s rows are created,
+    that csv file is to be closed and a new csv files to be created and continue the procedure there itself.
+    - If some files have less data then the csv file can also have less data but thr threshold was 1000s rows
+    - These extracted csv files were present in "extracted" folder in the bucket
+4) Now another python script was written to move the csv file content one-by-one into AWS OpenSearch and also an index to be created for that as well
+5) All the processed files which were getting inserted into open-search were being inserted into "processed_csv" folder as because if suppose if any file fails to get inserted, it will stay back in the "extracted" folder
+And then we can run the python script again to only insert those left out csv files in ope-search, this was saves the repitive process andd the end when no files remains the "extracted" folder gets deleted.
+So at the end only the  "source_files" and "processed_csv" folder remains
+6) So one-by-one all the csv files content were moved to open-search under that same index
+7) Now if we search by that index in open-search it shows "10252451" records
+8) Now based on this python fast-api endpoints were created which were related to the UI need to display the records and also to create a keyword search filter by "file" or "content", this thing is not much related to our work
+
+
+The records in opensearch are stored in this format :
+
+{
+  "took": 64,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 1,
+      "relation": "eq"
+    },
+    "max_score": 15.76128,
+    "hits": [
+      {
+        "_index": "idx_depuy_dev_index",
+        "_id": "iCnAQ5oBv8hsVoMCruro",
+        "_score": 15.76128,
+        "_source": {
+          "file_name": "SEP-361 Rev 4 DePuy Franchise Inspection Readiness Procedure.docx",
+          "content": "Purpose Audit preparation is critical to achieve a successful outcome of an external audit The purpose of this procedure is to establish the essential elements for preparing and managing external audits or inspections including the tools and resources needed to strategize coordinate communicate and support to ensure positive audit outcomes Audit and inspection readiness elements include any events leading up to an audit or inspection such as Facility operations assessments Corrective and or preventive actions to fix gaps Notification of audit or inspection Activities to sustain a state of audit or inspection readiness Audit management elements include Conducting and managing the audit After the audit – responses and escalations Scope This Standard Enterprise Procedure applies to all DePuy operating companies and sites and establishes an audit and inspection readiness and management program for the preparation and handling of health authority audits or inspections by local state federal or foreign regulatory agencies and notified bodies This procedure is applicable to all activities roles and responsibilities required to prepare for and effectively manage external audits or inspections This procedure also defines the tasks recommended to ensure a constant state of audit or inspection readiness External audits or inspections include those generally termed as third party audits or audits conducted by local state federal or foreign regulatory agencies and notified bodies Portions of the procedure may be applicable for internal and independent audits such as GMP GCP GLM PMS and MDR inspections References Definitions The terms inspection and audit will be used interchangeably as well as inspector investigator and auditor Roles and Responsibilities Procedure Pre inspection activities Readiness Planning for the audit is critical to achieve a successful audit outcome As part of audit planning there are many items that need to be completed in terms of notifications obtaining background information on the auditor and preparing documents The following sections detail the different pre inspection activities that are required to be completed prior to an external audit whether or not the visit is announced or anticipated The purpose is to maintain a readiness state at all times to ensure the organization can support and respond to any inspection Appendix 11 contains a visual representation of the process flow Activities include Logistics Identifying roles and responsibilities Training Document preparation Escalations Communications Factors that increase the likelihood of an inspection include but are not limited to New product introductions Field actions Significant quality management system organizational changes Regulatory submissions Notifications Upon Notification Notifications for audits can occur well in advance of the audit or can be unannounced When notification of an audit occurs the following information should be obtained by the site contacted The full name title and contact information of the auditor s including the anticipated role of each auditor when there are multiple auditors Typically audits are conducted by one auditor however additional auditors may be required for additional specialized expertise or for training purposes The proposed starting date and duration of the audit Determine if there is any flexibility in the scheduling of the audit to verify the availability of key individuals during the proposed dates prior to finalization of the audit schedule However any changes granted in the actual audit schedule are at the discretion of the regulatory agency body Audits should occur during standard business hours of the site inspected to ensure full support of staff Audits will be permitted during non business hours with approval of site and or corporate management but not encouraged due to lack of staff The reason and scope of the audit including the location s – i e specific buildings sites campuses The US FDA will provide the general scope of the audit such as the compliance program or type of inspection pre market post market QSIT BIMO directed for cause However whenever possible obtain the reason and the scope of the audit to better focus audit preparation activities After Notification Following notification that an audit is going to occur at a site an escalation including reporting in EDGE should occur as per SEP 330 Following notification of the audit announced or unannounced Host Audit Lead or designee shall communicate the audit notification to the defined personnel as per the table in Appendix 10 at a minimum Note See Appendix 1 for an example of notifications Communications that are sent to ensure all employees in the facility and at support facilities as applicable are aware of the audit may include The Basic “Do’s Don’ts” Basic Standards for all employees To ensure availability of necessary personnel To refrain from unnecessary hallway lobby or cafeteria canteen conversations that may be held in proximity to the auditor in order to minimize distractions and potential misinterpretations even if in a different language Guidance on interactions with production associates and SMEs To limit discussion with Auditors to the subject in question as directed by the Host Audit Lead or designee To respond to queries professionally showing good knowledge of the Quality System with respect to the area To understand the auditor’s questions before answering and if necessary ask for clarification Pre Audit Preparation Upon notification of an audit the Inspection Coordinator shall engage an Inspection Readiness Team to immediately begin pre audit preparation activities as defined in CLEAR Appendix 2 Specific sub sections are described below Contacts The Inspection Readiness Team shall prepare contact lists as defined in Appendix 10 List should be reviewed periodically and updated as appropriate Inform Security and or Reception of the upcoming audit schedule including approximate auditor arrival times Provide the prepared arrival announcement contact list detailing who to immediately call when auditor s arrive Auditor Profile A profile of the auditor should be requested via email from an Information Specialist at J J Corporate Quality and Compliance The profile should be reviewed to determine the auditor’s experience auditing style and potential areas of focus If another J J site has been inspected by the auditor then the site should be contacted to obtain background info on the auditor including auditing style areas of focus etc Logistics Preparation Two conference rooms should be booked one for the Front Room and one for the Back Room for the duration of the audit per audit stream Each site shall designate a minimum of two dedicated rooms in the case of an unannounced audit The dedicated Front Back Rooms shall be made available as soon as the site learns of the unannounced audit and remain available for the duration of the audit An unannoun
+
+
+
+couldn't provide you the entire content as it was huge and difficult to copy from org's cloud pc environment but I hope you understand.
+
+
+Now the structure part :
+- As I said the structure work was to migrate the data from Oracle DB to PostgreSQL DB and there were multiple records.
+- So same here as well multiple database tables (based upon requirement and design phase talks and reports) were created and the data was migrated manually thorught sql commands from oracle to postgres.
+- Now for these tables as well, they were to be moved into aws open search so that when api-endpoints were created, the retrieval and search becomes easier and quick from the UI POV
+- But as multiple tables were there so multiple indexes were created (based upon requirement) and also there was one work which I don't exactly remember related to dimension table but I don't remember that
+- So yeah for mupltiple tables, multiple indexes were created and those records were inserted into open search as per their respective tables and index.
+- Now if do GET/_indexname then we can fetch those records from AWS OpenSearch and check them out via the dev tools
+
+
+Now the actual work starts here :
+
+In my current team (which is of GenAI work mainly) I have been told create a bridge between this project and that previous one and how:
+- Why we doing this ? Because in this current project we have an application (AI chat interface application which does lots of work but not our concern right now) so we have to feed all those descriptive content from the un-structure part into this application (RAG usecase kinda as far as I understood).
+- So I was told to create vector embeddings for those each of thos records those in aws open search.
+- As far as I understood, this is mainly to be done for the un-structure part only as that's the part where a lot of descriptive content is present.
+- So I have to read the csv files from aws open search bucket (processed_csv folder) and then again create index for it and then insert them again in open-search while also maintain the same format of insertion as it had previously (which I gave you above) and only 1 column to be added which will for vector_embedding
+- The as it is created I have to create api-endpoint for it exposing those records or I think maybe they will just send the query and I have to vector_embedd them and provide them the similar record i.e the similarity search functionality.
+
+For this api end point I need to talk with the team but I will let you know and also maybe for that embedding phase, maybe we need to do it in such a way such that, that same index remains and we just have to add the extra field for vector embedding, did you understood, basically new index not to be created, under that same index just add another field which will be for vector embedding (but I don't know about this will let you know later)
+
+
+This is work overview which I need to do and I need your help in this 
+
+
+This is the extra informations related to it regarding the s3 path and all and opensearch query regarding the total records and all :
+
+Source NAS Files in S3 (Bucket) -> s3://itx-cdm-nas-epitcua/development/Adaptiv/depuy/source_files/arch_Dev/DePuy/
+
+Processed CSV File in S3 (Bucket) -> s3://itx-cdm-nas-epitcua/development/Adaptiv/depuy/processed_csvs/
+
+
+
+To retrieve all the records stored in  : GET idx_depuy_dev_index/_search
+
+Total records present in open search : GET idx_depuy_dev_index/_count 
+
+{
+  "count": 10252451,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  }
+}
+
+Data is stored in open search in this format :
+{
+  "took": 64,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 1,
+      "relation": "eq"
+    },
+    "max_score": 15.76128,
+    "hits": [
+      {
+        "_index": "idx_depuy_dev_index",
+        "_id": "iCnAQ5oBv8hsVoMCruro",
+        "_score": 15.76128,
+        "_source": {
+          "file_name": "SEP-361 Rev 4 DePuy Franchise Inspection Readiness Procedure.docx",
+          "content": "Purpose Audit preparation is critical to achieve a successful outcome of an external audit The purpose of this procedure is to establish the essential elements for preparing and managing external audits or inspections including the tools and resources needed to strategize coordinate communicate and support to ensure positive audit outcomes Audit and inspection readiness elements include any events leading up to an audit or inspection such as Facility operations assessments Corrective and or preventive actions to fix gaps Notification of audit or inspection Activities to sustain a state of audit or inspection readiness Audit management elements include Conducting and managing the audit After the audit – responses and escalations Scope This Standard Enterprise Procedure applies to all DePuy operating companies and sites and establishes an audit and inspection readiness and management program for the preparation and handling of health authority audits or inspections by local state federal or foreign regulatory agencies and notified bodies This procedure is applicable to all activities roles and responsibilities required to prepare for and effectively manage external audits or inspections This procedure also defines the tasks recommended to ensure a constant state of audit or inspection readiness External audits or inspections include those generally termed as third party audits or audits conducted by local state federal or foreign regulatory agencies and notified bodies Portions of the procedure may be applicable for internal and independent audits such as GMP GCP GLM PMS and MDR inspections References Definitions The terms inspection and audit will be used interchangeably as well as inspector investigator and auditor Roles and Responsibilities Procedure Pre inspection activities Readiness Planning for the audit is critical to achieve a successful audit outcome As part of audit planning there are many items that need to be completed in terms of notifications obtaining background information on the auditor and preparing documents The following sections detail the different pre inspection activities that are required to be completed prior to an external audit whether or not the visit is announced or anticipated The purpose is to maintain a readiness state at all times to ensure the organization can support and respond to any inspection Appendix 11 contains a visual representation of the process flow Activities include Logistics Identifying roles and responsibilities Training Document preparation Escalations Communications Factors that increase the likelihood of an inspection include but are not limited to New product introductions Field actions Significant quality management system organizational changes Regulatory submissions Notifications Upon Notification Notifications for audits can occur well in advance of the audit or can be unannounced When notification of an audit occurs the following information should be obtained by the site contacted The full name title and contact information of the auditor s including the anticipated role of each auditor when there are multiple auditors Typically audits are conducted by one auditor however additional auditors may be required for additional specialized expertise or for training purposes The proposed starting date and duration of the audit Determine if there is any flexibility in the scheduling of the audit to verify the availability of key individuals during the proposed dates prior to finalization of the audit schedule However any changes granted in the actual audit schedule are at the discretion of the regulatory agency body Audits should occur during standard business hours of the site inspected to ensure full support of staff Audits will be permitted during non business hours with approval of site and or corporate management but not encouraged due to lack of staff The reason and scope of the audit including the location s – i e specific buildings sites campuses The US FDA will provide the general scope of the audit such as the compliance program or type of inspection pre market post market QSIT BIMO directed for cause However whenever possible obtain the reason and the scope of the audit to better focus audit preparation activities After Notification Following notification that an audit is going to occur at a site an escalation including reporting in EDGE should occur as per SEP 330 Following notification of the audit announced or unannounced Host Audit Lead or designee shall communicate the audit notification to the defined personnel as per the table in Appendix 10 at a minimum Note See Appendix 1 for an example of notifications Communications that are sent to ensure all employees in the facility and at support facilities as applicable are aware of the audit may include The Basic “Do’s Don’ts” Basic Standards for all employees To ensure availability of necessary personnel To refrain from unnecessary hallway lobby or cafeteria canteen conversations that may be held in proximity to the auditor in order to minimize distractions and potential misinterpretations even if in a different language Guidance on interactions with production associates and SMEs To limit discussion with Auditors to the subject in question as directed by the Host Audit Lead or designee To respond to queries professionally showing good knowledge of the Quality System with respect to the area To understand the auditor’s questions before answering and if necessary ask for clarification Pre Audit Preparation Upon notification of an audit the Inspection Coordinator shall engage an Inspection Readiness Team to immediately begin pre audit preparation activities as defined in CLEAR Appendix 2 Specific sub sections are described below Contacts The Inspection Readiness Team shall prepare contact lists as defined in Appendix 10 List should be reviewed periodically and updated as appropriate Inform Security and or Reception of the upcoming audit schedule including approximate auditor arrival times Provide the prepared arrival announcement contact list detailing who to immediately call when auditor s arrive Auditor Profile A profile of the auditor should be requested via email from an Information Specialist at J J Corporate Quality and Compliance The profile should be reviewed to determine the auditor’s experience auditing style and potential areas of focus If another J J site has been inspected by the auditor then the site should be contacted to obtain background info on the auditor including auditing style areas of focus etc Logistics Preparation Two conference rooms should be booked one for the Front Room and one for the Back Room for the duration of the audit per audit stream Each site shall designate a minimum of two dedicated rooms in the case of an unannounced audit The dedicated Front Back Rooms shall be made available as soon as the site learns of the unannounced audit and remain available for the duration of the audit An unannoun
+
+
+
+
+
+This is the configuration file which contains the bucket name and other related information :
+
+{
+    "nas": {
+        "nas_host": "awsalmnva1200.jnj.com"
+},
+    "s3": {
+        "aws_access_key_id": "",
+        "aws_secret_access_key": "",
+        "object_name":"development/Adaptiv/depuy/source_files/arch_Dev/DePuy/Approval Change Request/",
+        "extraction" : "development/Adaptiv/depuy/extractions/",
+        "processed_csv" : "development/Adaptiv/depuy/processed_csvs"
+    },
+    "OpenSearch" : {
+        "host" : "search-edl-test-dev-kdar4v4y3sqwi4z6pfaedffyru.us-east-1.es.amazonaws.com",
+        "region" : "us-east-1",
+        "Index" : "idx_depuy_dev_index"
+    },
+    "Bucket" : "itx-cdm-nas-epitcua",
+    "Oracle" : {
+        "host" : "ITSUSRALSP05728.jnj.com",
+        "port" : "1521",
+        "service" : "MRAQ0460.jnj.com",
+        "schema" : "ARCHIVE_SCHEMA14"
+    },
+    "Postgre" : {
+        "database" : "ADAPTIV_DEV",
+        "host" : "wcdmpd01.ceomzuacstct.us-east-1.rds.amazonaws.com",
+        "port" : "5432",
+         "schema" : "depuy_core"
+    }
+    
+}
+
+
+Initially I need the work flow like how you're going to do this, the work-flow and this should from an industry standard pov 
+
+
+
+

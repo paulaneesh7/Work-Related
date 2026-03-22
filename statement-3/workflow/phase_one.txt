@@ -1,0 +1,49 @@
+FOR each CSV file in S3:
+    ↓
+Download file
+    ↓
+FOR each row:
+    ↓
+Chunk content
+    ↓
+FOR each chunk:
+    ↓
+Generate embedding
+    ↓
+Insert into OpenSearch
+    ↓
+If ANY failure:
+    → log it
+    → continue
+
+After full file:
+    IF success → move file → embedding_done/
+    ELSE → move file → embedding_failed/
+
+
+
+
+
+
+--------------------------------------------------------------
+
+
+
+1. List all CSV files from S3 (processed_csvs)
+
+2. For each file:
+   - Download locally (temp)
+
+3. For each row:
+   - Extract content
+   - Chunk
+   - Embed
+   - Store in OpenSearch (bulk buffer)
+
+4. After file:
+   - If success → move to embedding_done/
+   - If partial failure → move to embedding_failed/
+
+5. Maintain logs
+
+6. Re-run for failed files

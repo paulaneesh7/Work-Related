@@ -1,0 +1,44 @@
+Source NAS Files in S3 (Bucket) -> s3://itx-cdm-nas-epitcua/development/Adaptiv/depuy/source_files/arch_Dev/DePuy/
+
+Processed CSV File in S3 (Bucket) -> s3://itx-cdm-nas-epitcua/development/Adaptiv/depuy/processed_csvs/
+
+
+
+To retrieve all the records stored in  : GET idx_depuy_dev_index/_search
+
+Total records present in open search : GET idx_depuy_dev_index/_count 
+
+{
+  "count": 10252451,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  }
+}
+
+Data is stored in open search in this format :
+{
+  "took": 64,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 1,
+      "relation": "eq"
+    },
+    "max_score": 15.76128,
+    "hits": [
+      {
+        "_index": "idx_depuy_dev_index",
+        "_id": "iCnAQ5oBv8hsVoMCruro",
+        "_score": 15.76128,
+        "_source": {
+          "file_name": "SEP-361 Rev 4 DePuy Franchise Inspection Readiness Procedure.docx",
+          "content": "Purpose Audit preparation is critical to achieve a successful outcome of an external audit The purpose of this procedure is to establish the essential elements for preparing and managing external audits or inspections including the tools and resources needed to strategize coordinate communicate and support to ensure positive audit outcomes Audit and inspection readiness elements include any events leading up to an audit or inspection such as Facility operations assessments Corrective and or preventive actions to fix gaps Notification of audit or inspection Activities to sustain a state of audit or inspection readiness Audit management elements include Conducting and managing the audit After the audit – responses and escalations Scope This Standard Enterprise Procedure applies to all DePuy operating companies and sites and establishes an audit and inspection readiness and management program for the preparation and handling of health authority audits or inspections by local state federal or foreign regulatory agencies and notified bodies This procedure is applicable to all activities roles and responsibilities required to prepare for and effectively manage external audits or inspections This procedure also defines the tasks recommended to ensure a constant state of audit or inspection readiness External audits or inspections include those generally termed as third party audits or audits conducted by local state federal or foreign regulatory agencies and notified bodies Portions of the procedure may be applicable for internal and independent audits such as GMP GCP GLM PMS and MDR inspections References Definitions The terms inspection and audit will be used interchangeably as well as inspector investigator and auditor Roles and Responsibilities Procedure Pre inspection activities Readiness Planning for the audit is critical to achieve a successful audit outcome As part of audit planning there are many items that need to be completed in terms of notifications obtaining background information on the auditor and preparing documents The following sections detail the different pre inspection activities that are required to be completed prior to an external audit whether or not the visit is announced or anticipated The purpose is to maintain a readiness state at all times to ensure the organization can support and respond to any inspection Appendix 11 contains a visual representation of the process flow Activities include Logistics Identifying roles and responsibilities Training Document preparation Escalations Communications Factors that increase the likelihood of an inspection include but are not limited to New product introductions Field actions Significant quality management system organizational changes Regulatory submissions Notifications Upon Notification Notifications for audits can occur well in advance of the audit or can be unannounced When notification of an audit occurs the following information should be obtained by the site contacted The full name title and contact information of the auditor s including the anticipated role of each auditor when there are multiple auditors Typically audits are conducted by one auditor however additional auditors may be required for additional specialized expertise or for training purposes The proposed starting date and duration of the audit Determine if there is any flexibility in the scheduling of the audit to verify the availability of key individuals during the proposed dates prior to finalization of the audit schedule However any changes granted in the actual audit schedule are at the discretion of the regulatory agency body Audits should occur during standard business hours of the site inspected to ensure full support of staff Audits will be permitted during non business hours with approval of site and or corporate management but not encouraged due to lack of staff The reason and scope of the audit including the location s – i e specific buildings sites campuses The US FDA will provide the general scope of the audit such as the compliance program or type of inspection pre market post market QSIT BIMO directed for cause However whenever possible obtain the reason and the scope of the audit to better focus audit preparation activities After Notification Following notification that an audit is going to occur at a site an escalation including reporting in EDGE should occur as per SEP 330 Following notification of the audit announced or unannounced Host Audit Lead or designee shall communicate the audit notification to the defined personnel as per the table in Appendix 10 at a minimum Note See Appendix 1 for an example of notifications Communications that are sent to ensure all employees in the facility and at support facilities as applicable are aware of the audit may include The Basic “Do’s Don’ts” Basic Standards for all employees To ensure availability of necessary personnel To refrain from unnecessary hallway lobby or cafeteria canteen conversations that may be held in proximity to the auditor in order to minimize distractions and potential misinterpretations even if in a different language Guidance on interactions with production associates and SMEs To limit discussion with Auditors to the subject in question as directed by the Host Audit Lead or designee To respond to queries professionally showing good knowledge of the Quality System with respect to the area To understand the auditor’s questions before answering and if necessary ask for clarification Pre Audit Preparation Upon notification of an audit the Inspection Coordinator shall engage an Inspection Readiness Team to immediately begin pre audit preparation activities as defined in CLEAR Appendix 2 Specific sub sections are described below Contacts The Inspection Readiness Team shall prepare contact lists as defined in Appendix 10 List should be reviewed periodically and updated as appropriate Inform Security and or Reception of the upcoming audit schedule including approximate auditor arrival times Provide the prepared arrival announcement contact list detailing who to immediately call when auditor s arrive Auditor Profile A profile of the auditor should be requested via email from an Information Specialist at J J Corporate Quality and Compliance The profile should be reviewed to determine the auditor’s experience auditing style and potential areas of focus If another J J site has been inspected by the auditor then the site should be contacted to obtain background info on the auditor including auditing style areas of focus etc Logistics Preparation Two conference rooms should be booked one for the Front Room and one for the Back Room for the duration of the audit per audit stream Each site shall designate a minimum of two dedicated rooms in the case of an unannounced audit The dedicated Front Back Rooms shall be made available as soon as the site learns of the unannounced audit and remain available for the duration of the audit An unannoun

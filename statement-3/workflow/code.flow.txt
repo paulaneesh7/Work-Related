@@ -1,0 +1,23 @@
+1. Script starts
+2. Connects to:
+   - S3
+   - OpenSearch
+   - Azure OpenAI
+3. Lists all CSV files from:
+   processed_csvs/
+4. For each file:
+    ↓
+    Download from S3
+    ↓
+    Read row by row
+    ↓
+    Chunk content (LangChain)
+    ↓
+    Generate embeddings
+    ↓
+    Store in OpenSearch (bulk)
+    ↓
+    Move file:
+        success → embedding_done/
+        failure → embedding_failed/
+5. Ends

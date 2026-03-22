@@ -1,0 +1,31 @@
+{
+    "nas": {
+        "nas_host": "awsalmnva1200.jnj.com"
+},
+    "s3": {
+        "aws_access_key_id": "",
+        "aws_secret_access_key": "",
+        "object_name":"development/Adaptiv/depuy/source_files/arch_Dev/DePuy/Approval Change Request/",
+        "extraction" : "development/Adaptiv/depuy/extractions/",
+        "processed_csv" : "development/Adaptiv/depuy/processed_csvs"
+    },
+    "OpenSearch" : {
+        "host" : "search-edl-test-dev-kdar4v4y3sqwi4z6pfaedffyru.us-east-1.es.amazonaws.com",
+        "region" : "us-east-1",
+        "Index" : "idx_depuy_dev_index"
+    },
+    "Bucket" : "itx-cdm-nas-epitcua",
+    "Oracle" : {
+        "host" : "ITSUSRALSP05728.jnj.com",
+        "port" : "1521",
+        "service" : "MRAQ0460.jnj.com",
+        "schema" : "ARCHIVE_SCHEMA14"
+    },
+    "Postgre" : {
+        "database" : "ADAPTIV_DEV",
+        "host" : "wcdmpd01.ceomzuacstct.us-east-1.rds.amazonaws.com",
+        "port" : "5432",
+         "schema" : "depuy_core"
+    }
+    
+}
